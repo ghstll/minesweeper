@@ -24,7 +24,7 @@ std::vector<std::vector<int>> createBoardGame(char difficult){
     auto it = difficultMap.find(difficult);
     int size = it -> second;
     int countbombs = ratioBombs[size];
-
+   
     std::map<std::pair<int,int>,int> cornerValues ={
         {{0,0},0}, // TOP LEFT CORNER
         {{0,size-1},1}, // TOP RIGHT CORNER
@@ -36,21 +36,79 @@ std::vector<std::vector<int>> createBoardGame(char difficult){
         std::pair<int,int> key ={i , j};
         auto it = cornerValues.find(key);
         if(it != cornerValues.end()){
-            return cornerValues[{i,j}]; 
+            return cornerValues[{i,j}]; // A CORNER VALUE
         }else{
-            return 4;
+            return 4; // NOT A CORNER VALUE
         }
     };
-   
+    
     std::vector<std::vector<int>>mat(size,std::vector<int>(size,0));
+
+
+    auto checkBombsCornerNumber = [&mat,size](int i , int j,int position) -> int {
+        int count = 0;
+        switch (position){
+           case 0:
+                if(mat[0][1] == 1){
+                    count++;
+                }else if(mat[1][0] == 1){
+                    count++;
+                }else if(mat[1][1] == 1){
+                    count++;
+                }
+                return count;
+                break;
+            case 1:
+                if(mat[0][size - 2] == 1){
+                    count++;
+                }if(mat[1][size - 1] == 1){
+                    count++;
+                }if(mat[1][size - 2] == 1){
+                    count++;
+                }
+                return count;
+                break;
+            case 2:
+                if(mat[size - 1][size - 2] == 1){
+                    count++;
+                }if(mat[size - 2][size - 1] == 1){
+                    count++;
+                }if(mat[size - 2][size - 2] == 1){
+                    count++;
+                }
+                return count;
+                break;
+            case 3:
+                if(mat[size - 2][0] == 1){
+                    count++;
+                }if(mat[size - 1][1] == 1){
+                    count++;
+                }if(mat[size - 2][1] == 1){
+                    count++;
+                }
+                return count;
+                break;
+
+
+        }
+    };
     if(it !=  difficultMap.end()){
-        while (countbombs > 0) // FILL BOARD WITH BOMBS 
+        while (countbombs > 0) // FILL THE BOARD WITH RANDOM BOMBS
         {   
             int i = rand() % size ;
             int j = rand() % size ;
             if(mat[i][j] == 0){
                 mat[i][j] = 1;
                 countbombs--;
+            }
+        }
+        int i , j;
+        for(i=0;i<size;i++){
+            for(j=0;j<size;j++){
+                int position = cornerNumber(i,j);
+                if(mat[i][j] == 0 && position !=4){
+                   mat[i][j] = checkBombsCornerNumber(i,j,position);
+                }
             }
         }
         
