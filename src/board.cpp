@@ -32,12 +32,18 @@ std::vector<std::vector<int>> createBoardGame(char difficult){
         {{size-1,0},3} // BOTTOM LEFT CORNER
     };
 
-    std::vector<std::vector<int>>mat(size,std::vector<int>(size,0));
+    auto cornerNumber = [size,&cornerValues](int i,int j) -> int { // FUNCTION TO CHECK IF A SQUARE IS A CORNER NUMBER
+        std::pair<int,int> key ={i , j};
+        auto it = cornerValues.find(key);
+        if(it != cornerValues.end()){
+            return cornerValues[{i,j}]; 
+        }else{
+            return 4;
+        }
+    };
    
-
-
+    std::vector<std::vector<int>>mat(size,std::vector<int>(size,0));
     if(it !=  difficultMap.end()){
-
         while (countbombs > 0) // FILL BOARD WITH BOMBS 
         {   
             int i = rand() % size ;
@@ -48,25 +54,9 @@ std::vector<std::vector<int>> createBoardGame(char difficult){
             }
         }
         
-     
-
-
-        auto cornerNumber = [size,&cornerValues](int i,int j) -> int { // FUNCTION TO CHECK IF A SQUARE IS A CORNER NUMBER
-            std::pair<int,int> key ={i , j};
-            auto it = cornerValues.find(key);
-            if(it != cornerValues.end()){
-                return cornerValues[{i,j}]; 
-            }else{
-                return 4;
-            }
-        };
-
-
-      
-      
-
-
-
+        
+        
+        
     }else{
         std::cout << "Dificultad no valida";
     }
