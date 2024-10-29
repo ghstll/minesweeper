@@ -45,54 +45,35 @@ std::vector<std::vector<int>> createBoardGame(char difficult){
     std::vector<std::vector<int>>mat(size,std::vector<int>(size,0));
 
 
-    auto checkBombsCornerNumber = [&mat,size](int i , int j,int position) -> int {
+    auto checkBombsCornerNumber = [&mat,size](int position) -> int {
         int count = 0;
         switch (position){
            case 0:
-                if(mat[0][1] == 1){
-                    count++;
-                }else if(mat[1][0] == 1){
-                    count++;
-                }else if(mat[1][1] == 1){
-                    count++;
-                }
+                if(mat[0][1] == 1) count++;
+                if(mat[1][0] == 1) count++;
+                if(mat[1][1] == 1) count++;
                 return count;
-                break;
             case 1:
-                if(mat[0][size - 2] == 1){
-                    count++;
-                }if(mat[1][size - 1] == 1){
-                    count++;
-                }if(mat[1][size - 2] == 1){
-                    count++;
-                }
+                if(mat[0][size - 2] == 1) count++;
+                if(mat[1][size - 1] == 1) count++;
+                if(mat[1][size - 2] == 1) count++;
                 return count;
-                break;
             case 2:
-                if(mat[size - 1][size - 2] == 1){
-                    count++;
-                }if(mat[size - 2][size - 1] == 1){
-                    count++;
-                }if(mat[size - 2][size - 2] == 1){
-                    count++;
-                }
+                if(mat[size - 1][size - 2] == 1) count++;
+                if(mat[size - 2][size - 1] == 1) count++;
+                if(mat[size - 2][size - 2] == 1) count++;
                 return count;
-                break;
             case 3:
-                if(mat[size - 2][0] == 1){
-                    count++;
-                }if(mat[size - 1][1] == 1){
-                    count++;
-                }if(mat[size - 2][1] == 1){
-                    count++;
-                }
+                if(mat[size - 2][0] == 1) count++;
+                if(mat[size - 1][1] == 1) count++;
+                if(mat[size - 2][1] == 1) count++;
                 return count;
-                break;
-
-
+            default:
+                return 0;
         }
     };
     if(it !=  difficultMap.end()){
+        srand(time(0));
         while (countbombs > 0) // FILL THE BOARD WITH RANDOM BOMBS
         {   
             int i = rand() % size ;
@@ -106,10 +87,12 @@ std::vector<std::vector<int>> createBoardGame(char difficult){
         for(i=0;i<size;i++){
             for(j=0;j<size;j++){
                 int position = cornerNumber(i,j);
-                if(mat[i][j] == 0 && position !=4){
-                   mat[i][j] = checkBombsCornerNumber(i,j,position);
+                if(mat[i][j] == 0 && position != 4){
+                   mat[i][j] = checkBombsCornerNumber(position);
+                }else if(mat[i][j] == 0 && position == 4){
+
                 }
-            }
+            }   
         }
         
         
