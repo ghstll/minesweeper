@@ -6,6 +6,9 @@
 #include <iostream>
 std::vector<std::vector<int>> createBoardGame(char difficult){
 
+
+
+    
     std::map<char,int> difficultMap = {
         {'e',8}, // EASY 
         {'m',12}, // MEDIUM
@@ -18,52 +21,49 @@ std::vector<std::vector<int>> createBoardGame(char difficult){
         {16,38}
     };
     
-
-
-
-    std::vector<std::vector<int>>mat;
     auto it = difficultMap.find(difficult);
-    
-    int i , j;
+    int size = it -> second;
+    int countbombs = ratioBombs[size];
+
+    std::map<std::pair<int,int>,int> cornerValues ={
+        {{0,0},0}, // TOP LEFT CORNER
+        {{0,size-1},1}, // TOP RIGHT CORNER
+        {{size-1,size-1},2}, // BOTTOM RIGHT CORNER
+        {{size-1,0},3} // BOTTOM LEFT CORNER
+    };
+
+    std::vector<std::vector<int>>mat(size,std::vector<int>(size,0));
+   
+
 
     if(it !=  difficultMap.end()){
 
-      
-
-        int size = it -> second;
-        for (i=0;i<size;i++){
-            std::vector<int> row;
-            for (j=0;j<size;j++){
-                row.push_back(rand() % 2);
+        while (countbombs > 0) // FILL BOARD WITH BOMBS 
+        {   
+            int i = rand() % size ;
+            int j = rand() % size ;
+            if(mat[i][j] == 0){
+                mat[i][j] = 1;
+                countbombs--;
             }
-            mat.push_back(row);
         }
+        
+     
 
-    
-        std::map<std::pair<int,int>,int> cornerValues ={
-            {{0,0},0}, // TOP LEFT CORNER
-            {{0,size-1},1}, // TOP RIGHT CORNER
-            {{size-1,size-1},2}, // BOTTOM RIGHT CORNER
-            {{size-1,0},3} // BOTTOM LEFT CORNER
-        };
 
-        auto cornerNumber = [size,&cornerValues](int i,int j) -> int {
+        auto cornerNumber = [size,&cornerValues](int i,int j) -> int { // FUNCTION TO CHECK IF A SQUARE IS A CORNER NUMBER
             std::pair<int,int> key ={i , j};
-          
             auto it = cornerValues.find(key);
-            
             if(it != cornerValues.end()){
-               return cornerValues[{i,j}]; 
-            }  else{
+                return cornerValues[{i,j}]; 
+            }else{
                 return 4;
             }
-
         };
-        for (i=0;i<size;i++){
-            for(j=0;j<size;j++){
-              
-            }
-        }
+
+
+      
+      
 
 
 
@@ -72,14 +72,6 @@ std::vector<std::vector<int>> createBoardGame(char difficult){
     }
 
   
-
-    // for( auto& row : mat){
-    //     for(int& val : row ){
-    //         if (val == 2) {
-    //             val = 5;
-    //         }
-    //     }
-    // }
     
     return mat;
 }
