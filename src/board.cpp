@@ -174,7 +174,7 @@ std::vector<std::vector<int>> createBoardGame(char difficult){
     }else{
         std::cout << "Dificultad no valida";
     }
-
+    
   
     
     return mat;
