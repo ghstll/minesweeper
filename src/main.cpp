@@ -25,14 +25,13 @@ int main(){
     auto board = createBoardGame(difficult);
      for (const auto& row : board) {
         for (int val : row) {
-            std::cout << val << "    ";
-            // if (val == 0)
-            // {
-            //     std::cout <<" O "; 
-            // }else{
-            //     std::cout <<" B "; 
-
-            // }
+            if(val == 9){
+                std::cout << "X" << "    ";
+            }
+            else{
+                std::cout << val << "    ";
+            }
+           
             
             
         }
