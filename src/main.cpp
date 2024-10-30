@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <iostream>
-#include "board.h"
+#include "..\include\board.h"
 #include <stdlib.h>
 //  0 = VACIO
 //  1 = MINA
