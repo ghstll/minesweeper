@@ -43,10 +43,7 @@ std::vector<std::vector<int>> createBoardGame(char difficult){
         }
     };
     
-    auto centralNumber = [](int i , int j) -> int{
-        
-    };
-
+  
 
     auto borderNumber = [size](int i , int j) -> int{
         if(j == 0) return 0;
@@ -55,8 +52,33 @@ std::vector<std::vector<int>> createBoardGame(char difficult){
         if(i == size - 1) return 3;
         return 4; // NOT A BORDER NUMBER
     };
+
+    auto centralNumber = [borderNumber,cornerNumber](int i , int j) -> int{
+        if(borderNumber(i,j) == 4 && cornerNumber(i,j) == 4){
+            return 1;
+        }else{
+            return 0;
+        }
+    };
+
     std::vector<std::vector<int>>mat(size,std::vector<int>(size,0));
-    
+    auto checkBombsCentralNumber = [&mat,size,borderNumber,centralNumber](int i, int j) -> int {
+        int count = 0;
+        if(centralNumber(i,j) == 1){
+            if(mat[i-1][j-1] == 9) count++; 
+            if(mat[i-1][j] == 9) count++; 
+            if(mat[i-1][j+1] == 9) count++; 
+            if(mat[i][j+1] == 9) count++; 
+            if(mat[i+1][j+1] == 9) count++; 
+            if(mat[i+1][j] == 9) count++; 
+            if(mat[i+1][j-1] == 9) count++; 
+            if(mat[i][j-1] == 9) count++; 
+            return count;
+
+        }else{
+            return count;
+        }
+    };
     auto checkBombsBorderNumber = [&mat,size,borderNumber](int i,int j) -> int {
         int count = 0;
         switch (borderNumber(i,j)){
@@ -137,8 +159,10 @@ std::vector<std::vector<int>> createBoardGame(char difficult){
                 int position = cornerNumber(i,j);
                 if(mat[i][j] == 0 && position != 4){
                    mat[i][j] = checkBombsCornerNumber(position);
-                }else if(mat[i][j] == 0){
+                }else if(mat[i][j] == 0 && borderNumber(i,j) != 4){
                     mat[i][j] = checkBombsBorderNumber(i,j);
+                }else if(mat[i][j] == 0 && centralNumber(i,j) != 0){
+                    mat[i][j] = checkBombsCentralNumber(i,j);
                 }
                
             }   
