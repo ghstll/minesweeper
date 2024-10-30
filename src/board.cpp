@@ -42,6 +42,17 @@ std::vector<std::vector<int>> createBoardGame(char difficult){
         }
     };
     
+    auto centralNumber = [](int i , int j) -> int{
+        
+    };
+
+
+    auto borderNumber = [size](int i , int j) -> int{
+        if(j == 0) return 0;
+        if(i == 0) return 1;
+        if(j == size - 1) return 2;
+        if(i == size - 1) return 3;
+    };
     std::vector<std::vector<int>>mat(size,std::vector<int>(size,0));
 
 
@@ -90,7 +101,7 @@ std::vector<std::vector<int>> createBoardGame(char difficult){
                 if(mat[i][j] == 0 && position != 4){
                    mat[i][j] = checkBombsCornerNumber(position);
                 }else if(mat[i][j] == 0 && position == 4){
-
+                    
                 }
             }   
         }
