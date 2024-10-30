@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <map>
 #include <iostream>
+#include <variant>
 std::vector<std::vector<int>> createBoardGame(char difficult){
 
 
@@ -52,32 +53,68 @@ std::vector<std::vector<int>> createBoardGame(char difficult){
         if(i == 0) return 1;
         if(j == size - 1) return 2;
         if(i == size - 1) return 3;
+        return 4; // NOT A BORDER NUMBER
     };
     std::vector<std::vector<int>>mat(size,std::vector<int>(size,0));
-
-
+    
+    auto checkBombsBorderNumber = [&mat,size,borderNumber](int i,int j) -> int {
+        int count = 0;
+        switch (borderNumber(i,j)){
+            case 0 :
+                if(mat[i-1][j] == 9) count++;
+                if(mat[i-1][j+1] == 9) count++;
+                if(mat[i][j+1] == 9) count++;
+                if(mat[i+1][j+1] == 9) count++;
+                if(mat[i+1][j] == 9) count++;
+                return count;
+            case 1 :
+                if(mat[i][j-1] == 9) count++;
+                if(mat[i+1][j-1] == 9) count++;
+                if(mat[i+1][j] == 9) count++;
+                if(mat[i+1][j+1] == 9) count++;
+                if(mat[i][j+1] == 9) count++;     
+                return count;   
+            case 2:
+                if(mat[i-1][j] == 9) count++;
+                if(mat[i-1][j-1] == 9) count++;
+                if(mat[i][j-1] == 9) count++;
+                if(mat[i+1][j-1] == 9) count++;
+                if(mat[i+1][j] == 9) count++;
+                return count;
+            case 3:
+                if(mat[i][j+1] == 9) count++;
+                if(mat[i-1][j+1] == 9) count++;
+                if(mat[i-1][j] == 9) count++;
+                if(mat[i-1][j-1] == 9) count++;
+                if(mat[i][j-1] == 9) count++;
+                return count;
+            default:
+                return count;
+                break;
+        }
+    };
     auto checkBombsCornerNumber = [&mat,size](int position) -> int {
         int count = 0;
         switch (position){
            case 0:
-                if(mat[0][1] == 1) count++;
-                if(mat[1][0] == 1) count++;
-                if(mat[1][1] == 1) count++;
+                if(mat[0][1] == 9) count++;
+                if(mat[1][0] == 9) count++;
+                if(mat[1][1] == 9) count++;
                 return count;
             case 1:
-                if(mat[0][size - 2] == 1) count++;
-                if(mat[1][size - 1] == 1) count++;
-                if(mat[1][size - 2] == 1) count++;
+                if(mat[0][size - 2] == 9) count++;
+                if(mat[1][size - 1] == 9) count++;
+                if(mat[1][size - 2] == 9) count++;
                 return count;
             case 2:
-                if(mat[size - 1][size - 2] == 1) count++;
-                if(mat[size - 2][size - 1] == 1) count++;
-                if(mat[size - 2][size - 2] == 1) count++;
+                if(mat[size - 1][size - 2] == 9) count++;
+                if(mat[size - 2][size - 1] == 9) count++;
+                if(mat[size - 2][size - 2] == 9) count++;
                 return count;
             case 3:
-                if(mat[size - 2][0] == 1) count++;
-                if(mat[size - 1][1] == 1) count++;
-                if(mat[size - 2][1] == 1) count++;
+                if(mat[size - 2][0] == 9) count++;
+                if(mat[size - 1][1] == 9) count++;
+                if(mat[size - 2][1] == 9) count++;
                 return count;
             default:
                 return 0;
@@ -90,7 +127,7 @@ std::vector<std::vector<int>> createBoardGame(char difficult){
             int i = rand() % size ;
             int j = rand() % size ;
             if(mat[i][j] == 0){
-                mat[i][j] = 1;
+                mat[i][j] = 9;
                 countbombs--;
             }
         }
@@ -100,9 +137,10 @@ std::vector<std::vector<int>> createBoardGame(char difficult){
                 int position = cornerNumber(i,j);
                 if(mat[i][j] == 0 && position != 4){
                    mat[i][j] = checkBombsCornerNumber(position);
-                }else if(mat[i][j] == 0 && position == 4){
-                    
+                }else if(mat[i][j] == 0){
+                    mat[i][j] = checkBombsBorderNumber(i,j);
                 }
+               
             }   
         }
         
